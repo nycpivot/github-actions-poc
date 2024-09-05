@@ -6,4 +6,4 @@ jobs:
     steps:
     - name: Show the trigger
       run: |
-        echo "Hello"
+        echo ${{ github.event_name }}
