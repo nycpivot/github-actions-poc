@@ -24,7 +24,7 @@ jobs:
           #export-env: true         # Export as environment variables
       - name: Set environment variables
         run: |
-          echo "acr_hostname=${{ steps.azure-keyvault-secrets.outputs.acr-hostname }}" >> $ACR_HOSTNAME
+          echo "acr_host=${{ steps.azure-keyvault-secrets.outputs.acr-hostname }}" >> $ACR_HOSTNAME
       - name: Use the secret
         run: |
           echo "The secret value is: $ACR_HOSTNAME"
