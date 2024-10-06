@@ -24,13 +24,17 @@ jobs:
           #export-env: true         # Export as environment variables
       - name: Set environment variables
         run: |
-          echo "acr_host=${{ steps.azure-keyvault-secrets.outputs.acr-hostname }}" >> $ACR_HOSTNAME
+          echo "ACR_HOSTNAME=${{ steps.azure-keyvault-secrets.outputs.acr-hostname }}" >> $GITHUB_ENV
+          echo "ACR_USERNAME=${{ steps.azure-keyvault-secrets.outputs.acr-username }}" >> $GITHUB_ENV
+
+          echo steps.azure-keyvault-secrets.outputs.acr-hostname
       - name: Use the secret
         run: |
           echo "The secret value is: $ACR_HOSTNAME"
           cat <<EOF | tee deploy.json
           {
-            "acr-hostname": "$ACR_HOSTNAME"
+            "acr-hostname": "$ACR_HOSTNAME",
+            "acr-username": "$ACR_USERNAME"
           }
           EOF
           cat deploy.json
