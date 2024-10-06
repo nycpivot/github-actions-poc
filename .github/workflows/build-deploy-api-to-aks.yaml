@@ -28,6 +28,12 @@ jobs:
       - name: Use the secret
         run: |
           echo "The secret value is: $ACR_HOSTNAME"
+          cat <<EOF | tee deploy.json
+          {
+            "acr-hostname: $ACR_HOSTNAME"
+          }
+          EOF
+          cat deploy.json
 
       # - name: Registry login
       #   uses: docker/login-action@v2
