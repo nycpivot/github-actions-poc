@@ -18,8 +18,10 @@ jobs:
       - name: Retrieve secrets from Azure Key Vault
         id: azure-keyvault
         run: |
-          secret_value=$(az keyvault secret show --name "acr-hostname" --vault-name "mmcmj" --query "value" -o tsv)
-          echo $secret_value
+          acr_host=$(az keyvault secret show --name "acr-hostname" --vault-name "mmcmj" --query "value" -o tsv)
+          acr_user=$(az keyvault secret show --name "acr-username" --vault-name "mmcmj" --query "value" -o tsv)
+          echo $acr_host
+          echo $acr_user
       - name: Get secrets from Azure Key Vault
         uses: Azure/get-keyvault-secrets@v1
         id: azure-keyvault-secrets
