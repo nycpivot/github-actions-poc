@@ -1,0 +1,62 @@
+name: build-deploy-web-to-aks
+on: workflow_dispatch
+env:
+  IMAGE_PATH: web
+  APP_NAME: ${{ github.event.repository.name }}
+  #VALUES_FILE : deployment/values.json
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
+      - name: Registry login
+        uses: docker/login-action@v2
+        with:
+          registry: mjacr.azurecr.io
+          username: mjacr
+          password: ${{ secrets.ACR_PASSWORD }}
+      - name: Build and push image
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          # context: ./src/web
+          file: ./src/web/Dockerfile
+          tags: |
+            mjacr.azurecr.io/${{ env.APP_NAME }}/${{ env.IMAGE_PATH }}:latest
+  deploy:
+    name: Deploy
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set the Kubernetes context
+        uses: azure/k8s-set-context@v2
+        with:
+          method: service-account
+          k8s-url: https://mjaks-dns-5v0kl9du.hcp.eastus2.azmk8s.io:443
+          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Deploy to the Kubernetes cluster
+        run: |
+          kubectl delete -f src/web/deployment.yaml
+          kubectl apply -f src/web/deployment.yaml
+        # uses: azure/k8s-deploy@v1
+        # with:
+        #   namespace: default
+        #   manifests: |
+        #     deployment.yaml
+        #   images: |
+        #     mjacr.azurecr.io/${{ env.APP_NAME }}/${{ env.IMAGE_PATH }}:latest
+
+      # - name: Build Docker Image
+      #   run: |
+      #     docker login mjacr.azurecr.io -u mjacr -p ${{ secrets.ACR_PASSWORD }}
+      #     docker build -f ./src/web/Dockerfile --no-cache -t $IMAGE_NAME .
+      #     docker push $IMAGE_NAME
+      #   env:
+      #     IMAGE_NAME: mjacr.azurecr.io/${{ env.IMAGE_PATH }}/${{ env.APP_NAME }}
+  
+
+      

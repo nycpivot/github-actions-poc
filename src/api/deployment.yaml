@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mj-poc-trusted-broker-api
+spec:
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: mjacr.azurecr.io/mj-poc-trusted-broker/api:latest
+      imagePullSecrets:
+        - name: github-container-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mj-poc-trusted-broker-api
+spec:
+  selector:
+    app: api
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

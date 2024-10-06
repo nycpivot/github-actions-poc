@@ -1,0 +1,6 @@
+@TrustedBroker.ExternalCloud.Api_HostAddress = http://localhost:5115
+
+GET {{TrustedBroker.ExternalCloud.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
