@@ -16,14 +16,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Get secrets from Azure Key Vault
-        uses: Azure/keyvault-secrets@v1
+        uses: Azure/get-keyvault-secrets@v1
+        id: azure-keyvault-secrets
         with:
           keyvault: "mmcmj"  # Azure Key Vault name
           secrets: "acr-hostname,acr-username"     # Secret name in Key Vault
           #export-env: true         # Export as environment variables
       - name: Set environment variables
         run: |
-          echo "ACR_HOSTNAME=${{ steps.azure-keyvault.outputs.acr-hostname }}" >> $GITHUB_ENV
+          echo "ACR_HOSTNAME=${{ steps.azure-keyvault-secrets.outputs.acr-hostname }}" >> $GITHUB_ENV
       - name: Use the secret
         run: |
           echo "The secret value is: $ACR_HOSTNAME"
