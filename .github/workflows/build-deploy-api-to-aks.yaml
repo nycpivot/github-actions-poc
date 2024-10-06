@@ -30,7 +30,7 @@ jobs:
           echo steps.azure-keyvault-secrets.outputs.acr-hostname
       - name: Use the secret
         run: |
-          echo "The secret value is: $ACR_HOSTNAME"
+          echo "The secret value is: $GITHUB_ENV"
           cat <<EOF | tee deploy.json
           {
             "acr-hostname": "$ACR_HOSTNAME",
