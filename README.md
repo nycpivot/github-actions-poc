@@ -1,2 +1,2 @@
-# gaaarctbpoc
-GAA Architecture Trusted Broker POC
+# github-actions-poc
+GitHub Actions POC
